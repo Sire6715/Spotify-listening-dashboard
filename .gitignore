@@ -20,11 +20,16 @@ backend/venv/
 !.yarn/releases
 !.yarn/versions
 
+__pycache__/
+*.pyc
+
 # testing
 /coverage
 
 # next.js
 /.next/
+.next/
+frontend/.next/
 /out/
 
 # production
