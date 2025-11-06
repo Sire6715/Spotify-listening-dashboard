@@ -5,6 +5,8 @@ from datetime import datetime
 from flask import Flask, redirect, request, jsonify, session
 import pandas as pd
 import os
+import numpy as np
+from collections import Counter
 from analysis import get_top_tracks_df, get_top_artists_df, get_recent_plays_df 
 
 load_dotenv()
@@ -124,7 +126,7 @@ def top_tracks():
     """
     access_token = session.get('access_token')
     df = get_top_tracks_df(access_token)  
-    return df.to_json(orient='records')  
+    return jsonify(df.to_dict(orient='records'))  
 
 
 @app.route('/top_artists')
@@ -140,7 +142,7 @@ def top_artists():
     """
     access_token = session.get('access_token')
     df = get_top_artists_df(access_token)
-    return df.to_json(orient='records')
+    return jsonify(df.to_dict(orient='records'))
 
 
 @app.route('/recently-played')
@@ -156,11 +158,69 @@ def recently_played():
     """
     access_token = session.get('access_token')
     df = get_recent_plays_df(access_token)
-    return df.to_json(orient='records')
+    return jsonify(df.to_dict(orient='records'))
+
+
+@app.route('/analysis')
+    #Load CSV data
+def analysis():
+        
+    tracks_df = pd.read_csv("data/top_tracks.csv")
+    artists_df = pd.read_csv("data/top_artists.csv")
+    recent_plays_df = pd.read_csv("data/recently_played.csv")
+    track_feature_df = pd.read_csv("data/SpotifyFeatures.csv")    
+    
+    #Merge track Featues
+    tracks_stats = pd.merge(
+        tracks_df,
+        track_feature_df,
+        on='Track',
+        how='left'
+    )
+    
+    # plays per hour
+    recent_plays_df['Played At'] = pd.to_datetime(recent_plays_df['Played At'])
+    plays_per_hour = recent_plays_df.set_index('Played At').resample('h').size().to_dict()
+    plays_per_hour_dict = {t.strftime('%Y-%m-%d %H:%M:%S'): count for t, count in plays_per_hour.items()}
+    
+    # Most listened song features 
+    features = ['Danceability', 'Energy', 'Speechiness', 'Instrumentalness', 'Valence']
+    track_features = tracks_stats.groupby('Track')[features].sum()
+    total_sum = np.sum(track_features.to_numpy())
+    feature_percentages = ((track_features.sum(axis=0) / total_sum) * 100).round().to_dict()
+
+    # Most listened artists
+    most_listened_artist = (
+        tracks_df.groupby('Artist')['Track']
+        .count()
+        .sort_values(ascending=False)
+        .to_dict()
+    )
+
+    # Genre distribution
+    artists_df['Genres'] = artists_df['Genres'].fillna('').apply(
+        lambda x: [g.strip() for g in x.split(',')] if x else []
+    )
+
+    all_genres = [genre for sublist in artists_df['Genres'] for genre in sublist]
+    genre_counts = Counter(all_genres)
+    genre_df = pd.DataFrame(genre_counts.items(), columns=['Genre', 'Count']).sort_values('Count', ascending=False)
+    genre_distribution = genre_df.to_dict(orient='records')
+
+    
+    # Return JSON 
+    return jsonify({
+        "plays_per_hour": plays_per_hour_dict,
+        "feature_percentages": feature_percentages,
+        "most_listened_artist": most_listened_artist,
+        "genre_distribution": genre_distribution,
+    })
 
 
 if __name__ == '__main__':
     """
     Run the Flask application on host 0.0.0.0 with debug mode enabled.
     """
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', debug=True) 
+
+# 
