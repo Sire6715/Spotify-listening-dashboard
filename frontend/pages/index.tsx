@@ -1,25 +1,18 @@
 import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+import { League_Spartan } from "next/font/google";
+import LoginPage from "@/components/spotify/Login";
 
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const league_spartan = League_Spartan({
+  variable: "--font-league-spartan",
   subsets: ["latin"],
 });
 
 export default function Home() {
   return (
     <div
-      className={`${geistSans.className} ${geistMono.className} flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black`}
+      className={`${league_spartan.className} flex min-h-screen items-center justify-center bg-[#121212] font-sans dark:bg-black`}
     >
-      <h1 className="text-4xl font-bold text-zinc-800 dark:text-zinc-200">
-        Welcome to Spotify Listening Dashboard!
-      </h1>
+      <LoginPage />
     </div>
   );
 }

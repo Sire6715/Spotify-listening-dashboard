@@ -31,6 +31,11 @@ def get_top_tracks_df(access_token):
     params = {'limit': 20, 'time_range': time_range}
 
     response = requests.get(API_BASE_URI + 'me/top/tracks', headers=headers, params=params)
+    
+        # Debugging info
+    print("Spotify API status:", response.status_code)
+    print("Spotify response:", response.text)
+    
     if response.status_code != 200:
         raise Exception(f"Error fetching tracks: {response.json()}")
 
