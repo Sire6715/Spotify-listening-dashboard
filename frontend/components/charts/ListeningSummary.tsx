@@ -7,7 +7,7 @@ export default function ListeningSummary() {
   const summary = useMemo(() => {
     if (!analysisData) return null;
 
-    const { most_listened_artist, genre_distribution, plays_per_hour } = analysisData;
+    const { most_listened_artist, genre_distribution, plays_per_hour } = analysisData ?? {};
 
     // Top artist + play count
     const artists = Object.values(most_listened_artist?.Artist ?? {});
@@ -32,12 +32,13 @@ export default function ListeningSummary() {
   }, [analysisData]);
 
   if (loading || !summary) {
-    return (
-      <div className="bg-[#181818] rounded-xl p-6 border border-[#333333] h-[160px] flex items-center justify-center">
-        <p className="text-[#B3B3B3] text-sm">Loading...</p>
-      </div>
-    );
-  }
+  return (
+    <div className="h-[10rem] rounded-xl p-6">
+      <div className="h-8 w-full bg-[#282828] rounded-full mb-6 animate-pulse" />
+      <div className="h-8 w-full bg-[#282828] rounded-full mb-6 animate-pulse" />
+    </div>
+  );
+}
 
   const { topArtist, topArtistCount, topGenre, totalPlays, hoursPlayed } = summary;
 

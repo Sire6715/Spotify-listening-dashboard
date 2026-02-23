@@ -9,24 +9,11 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+import {FeatureRadarProps, ChartEntry, SpotifyTooltipProps} from "@/interfaces"
+
 const SPOTIFY_GREEN = "#1DB954";
 const BORDER_COLOR = "#333333";
 
-interface FeatureRadarProps {
-  data: Record<string, number>;
-}
-
-interface ChartEntry {
-  feature: string;
-  value: number;
-  fullMark: number;
-}
-
-interface SpotifyTooltipProps {
-  active?: boolean;
-  payload?: { value?: number | string }[];
-  label?: string;
-}
 
 function SpotifyTooltip({ active, payload, label }: SpotifyTooltipProps) {
   if (!active || !payload?.length) return null;
@@ -40,8 +27,12 @@ function SpotifyTooltip({ active, payload, label }: SpotifyTooltipProps) {
 
 export default function FeatureRadar({ data }: FeatureRadarProps) {
   const chartData: ChartEntry[] = useMemo(() => {
-    if (!data.feature_percentages || typeof data.feature_percentages !== "object") return [];
-    return Object.entries(data.feature_percentages).map(([key, value]) => ({
+    if (
+      !data ||
+      typeof data !== "object"
+    )
+      return [];
+    return Object.entries(data as Record<string, number>).map(([key, value]) => ({
       feature: key,
       value,
       fullMark: 100,
@@ -50,8 +41,8 @@ export default function FeatureRadar({ data }: FeatureRadarProps) {
 
   if (!chartData.length) {
     return (
-      <div className="bg-[#181818] rounded-xl p-6 border border-[#333333] h-[380px] flex items-center justify-center">
-        <p className="text-[#B3B3B3] text-sm">Loading...</p>
+      <div className="bg-[#181818] h-92 rounded-xl p-6 border border-[#333333]">
+        <div className="h-full w-full bg-[#282828] rounded-full mb-6 animate-pulse" />
       </div>
     );
   }
@@ -63,7 +54,10 @@ export default function FeatureRadar({ data }: FeatureRadarProps) {
       </p>
 
       <ResponsiveContainer width="80%" height={180}>
-        <RadarChart data={chartData} margin={{ top: 10, right: 30, bottom: 10, left: 30 }}>
+        <RadarChart
+          data={chartData}
+          margin={{ top: 10, right: 30, bottom: 10, left: 30 }}
+        >
           <PolarGrid stroke={BORDER_COLOR} />
           <PolarAngleAxis
             dataKey="feature"
@@ -88,11 +82,11 @@ export default function FeatureRadar({ data }: FeatureRadarProps) {
         </RadarChart>
       </ResponsiveContainer>
 
-      <div className="flex flex-wrap gap-2.5 mt-2">
+      <div className="flex flex-wrap gap-1.5 mt-2">
         {chartData.map((d) => (
           <div key={d.feature} className="flex items-center gap-1.5">
             <div className="w-2 h-2 rounded-full bg-[#1DB954]" />
-            <span className="text-[#B3B3B3] text-xs">
+            <span className="text-[#B3B3B3] text-[9px]">
               {d.feature}:{" "}
               <span className="text-white font-semibold">{d.value}%</span>
             </span>

@@ -26,7 +26,7 @@ const Header: React.FC<SpotifyUser> = ({
         )}
       </div>
       <div className="flex flex-col-reverse items-center">
-        <h1 className="text-sm font-semibold">{display_name}</h1>
+        {/* <h1 className="text-sm font-semibold">{display_name}</h1> */}
         {images && images.length > 0 && images[0]?.url ? (
           <div className="h-12 w-12 bg-gray-200 rounded-full">
             <Image

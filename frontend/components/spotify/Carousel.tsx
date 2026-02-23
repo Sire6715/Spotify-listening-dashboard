@@ -9,22 +9,30 @@ import { SpotifyTrack } from "@/interfaces";
 export default function TrackCarousel() {
   const { topTracks, loading, error } = useSpotifyData();
 
-  const [emblaRef] = useEmblaCarousel(
-    { loop: true, align: "start" },
-    [Autoplay({ delay: 3000, stopOnInteraction: false })]
-  );
+  const [emblaRef] = useEmblaCarousel({ loop: true, align: "start" }, [
+    Autoplay({ delay: 3000, stopOnInteraction: false }),
+  ]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return (
+      <div className=" h-92 rounded-xl">
+        <div className="h-full w-full bg-[#282828] rounded-xl mb-6 animate-pulse" />
+      </div>
+    );
+  }
   if (error) return <p>Error: {error}</p>;
   if (!topTracks || topTracks.length === 0) return <p>No tracks found</p>;
 
   return (
-    <div className="relative w-full h-[25rem] mb-10 rounded-4xl overflow-hidden" ref={emblaRef}>
+    <div
+      className="relative w-full h-100 mb-10 rounded-4xl overflow-hidden"
+      ref={emblaRef}
+    >
       <div className="flex w-full h-full">
         {topTracks.map((track: SpotifyTrack, index: number) => (
           <div
             key={index}
-            className="flex-shrink-0 w-full h-full relative flex-col justify-end"
+            className="shrink-0 w-full h-full relative flex-col justify-end"
           >
             {/* Background image */}
             <div

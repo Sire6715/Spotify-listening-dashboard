@@ -15,7 +15,7 @@ const BORDER_COLOR = "#333333";
 const SURFACE_COLOR = "#181818";
 
 interface PlaysPerHourProps {
-  data: Record<string, number>;
+  data: Record<string, number> | undefined;
 }
 
 interface ChartEntry {
@@ -62,8 +62,8 @@ export default function PlaysPerHour({ data }: PlaysPerHourProps) {
   const [zoom, setZoom] = useState(true);
 
   const chartData: ChartEntry[] = useMemo(() => {
-    if (!data.plays_per_hour || typeof data.plays_per_hour !== "object") return [];
-    return Object.entries(data.plays_per_hour).map(([ts, plays]) => {
+    if (!data || typeof data !== "object") return [];
+    return Object.entries(data as Record<string , number>).map(([ts, plays]) => {
       const d = new Date(ts.replace(" ", "T"));
       const label = `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, "0")}h`;
       return { label, plays, ts };
@@ -82,13 +82,14 @@ export default function PlaysPerHour({ data }: PlaysPerHourProps) {
     return chartData.slice(min, max + 1);
   }, [chartData, zoom]);
 
-  if (!chartData.length) {
-    return (
-      <div className="bg-[#181818] rounded-xl p-6 border border-[#333333] h-[300px] flex items-center justify-center">
-        <p className="text-[#B3B3B3] text-sm">Loading...</p>
-      </div>
-    );
-  }
+
+if (!chartData.length) {
+  return (
+    <div className="bg-[#181818] h-[23rem] rounded-xl p-6 border border-[#333333]">
+      <div className="h-full w-full bg-[#282828] rounded-full mb-6 animate-pulse" />
+    </div>
+  );
+}
 
   return (
     <div className="bg-[#181818] rounded-xl p-6 border border-[#333333]">

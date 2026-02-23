@@ -1,29 +1,25 @@
-import React, { use } from "react";
+import React from "react";
 import useSpotifyData from "@/hooks/useSpotifyData";
-import { useStateContext } from "@/hooks/useStateContext";
 import Image from "next/image";
 import FeatureRadar from "@/components/charts/FeatureRadar";
-import GenreBar from "@/components/charts/GenreBar";
 import ArtistList from "@/components/charts/ArtistList";
 import PlaysPerHour from "@/components/charts/PlaysPerHour";
 import ListeningSummary from "@/components/charts/ListeningSummary";
 
 const Dashboard = () => {
-  const { userData, topArtists } = useSpotifyData();
+  const { userData, analysisData } = useSpotifyData();
 
-  const imageUrl = userData?.images?.[0]?.url;
+  const imageUrl = userData?.images?.[0].url;
   const displayName = userData?.display_name;
   const email = userData?.email;
   const country = userData?.country;
-
-  const { analysisData } = useSpotifyData(); // your hook
 
   {
     console.log(analysisData);
   }
   return (
-    <div className="grid grid-cols-4 dashboard">
-      <div className="col-span-3 flex flex-col">
+    <div className="grid grid-cols-8 dashboard">
+      <div className="col-span-6  flex flex-col">
         <div className="h-1/2 grid grid-cols-3 m-0">
           <div className="flex flex-col m-2 space-between items-center ">
             <div className="bg-white p-3 rounded-full">
@@ -60,14 +56,13 @@ const Dashboard = () => {
         </div>
 
         <div className="">
-          <PlaysPerHour data={analysisData} />
+          <PlaysPerHour data={analysisData?.plays_per_hour} />
         </div>
       </div>
 
-      <div className="flex flex-col gap-4">
-        {/* <GenreBar data={analysisData} /> */}
-        <ArtistList data={analysisData.most_listened_artist} />
-        <FeatureRadar data={analysisData} />
+      <div className="flex flex-col col-span-2 gap-4">
+        <ArtistList data={analysisData?.most_listened_artist} />
+        <FeatureRadar data={analysisData?.feature_percentages} />
       </div>
     </div>
   );

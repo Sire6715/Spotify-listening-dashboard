@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { SpotifyAnalytics, SpotifyUser,  SpotifyTrack, SpotifyArtist} from "@/interfaces";
 
 export default function useSpotifyData() {
- const [userData, setUserData] = useState<SpotifyUser[]>();
+ const [userData, setUserData] = useState<SpotifyUser | null>(null);
  const [topTracks, setTopTracks] = useState<SpotifyTrack[]>([]);
  const [topArtists, setTopArtists] = useState<SpotifyArtist[]>([]);
- const [analysisData, setAnalysisData] = useState<SpotifyAnalytics[]>([]);
+const [analysisData, setAnalysisData] = useState<SpotifyAnalytics | null>(null);
  const [loading, setLoading] = useState<boolean>(true);
  const [error, setError] = useState<string | null>(null);
 

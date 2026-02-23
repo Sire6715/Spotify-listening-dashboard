@@ -30,9 +30,14 @@ export default function MediaCard({
         ))}
       </div>
 
-      <div className="bg-[#1DB954] p-2 rounded-full">
-        <Play className="bg-[#1DB954]" href={spotifyUrl} />
-      </div>
+      <a
+        href={spotifyUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="bg-[#1DB954] p-2 rounded-full flex items-center justify-center"
+      >
+        <Play className="text-white fill-white" size={18} />
+      </a>
     </div>
   );
 }

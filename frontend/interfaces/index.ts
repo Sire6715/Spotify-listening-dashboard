@@ -39,6 +39,7 @@ export interface ButtonProps {
 }
 
 export interface SpotifyTrack {
+  Track: string;
   Album: string;
   "Album Image": string;
   Artist: string;
@@ -65,17 +66,27 @@ export interface SpotifyArtist {
 }
 
 export interface SpotifyAnalytics {
-  feature_percentages: {
-    Danceability: number;
-    Energy: number;
-    Instrumentalness: number;
-    Speechiness: number;
-    Valence: number;
+  feature_percentages: Record<string, number>;
+  genre_distribution: { Genre: string; Count: number }[];
+  most_listened_artist: {
+    Artist: Record<string, string>;
+    Track: Record<string, number>;
   };
-  genre_distribution: {
-    Genre: string;
-    Count: number;
-  }[];
-  most_listened_artist: Record<string, number>;
   plays_per_hour: Record<string, number>;
+}
+
+export interface FeatureRadarProps {
+  data: Record<string, number> | undefined;
+}
+
+export interface ChartEntry {
+  feature: string;
+  value: number;
+  fullMark: number;
+}
+
+export interface SpotifyTooltipProps {
+  active?: boolean;
+  payload?: { value?: number | string }[];
+  label?: string;
 }
