@@ -1,18 +1,6 @@
 import { useMemo } from "react";
+import {MostListenedArtist, ArtistListProps, ArtistEntry} from "@/interfaces";
 
-export interface MostListenedArtist {
-  Artist: Record<string, string>;
-  Track: Record<string, number>;
-}
-
-interface ArtistListProps {
-  data: MostListenedArtist | undefined;
-}
-
-interface ArtistEntry {
-  artist: string;
-  tracks: number;
-}
 
 export default function ArtistList({ data }: ArtistListProps) {
   const top3: ArtistEntry[] = useMemo(() => {
@@ -22,7 +10,7 @@ export default function ArtistList({ data }: ArtistListProps) {
     return artists
       .map((artist, i) => ({ artist, tracks: tracks[i] }))
       .sort((a, b) => b.tracks - a.tracks)
-      .slice(0, 3);
+      .slice(0, 10);
   }, [data]);
 
 if (!top3.length) {
@@ -46,7 +34,7 @@ if (!top3.length) {
 }
 
   return (
-    <div className="bg-[#181818] rounded-xl p-6 border border-[#333333] h-full">
+    <div className="bg-[#181818] rounded-xl px-4 pb-0 pt-2 border border-[#333333] h-full">
       <p className="text-[#B3B3B3] text-[11px] font-bold tracking-widest uppercase mb-4 mt-0">
         Most Listened Artists This Week
       </p>
@@ -60,7 +48,7 @@ if (!top3.length) {
             <div className="flex items-center gap-3">
               <span className="text-[#B3B3B3] text-xs w-4 tabular-nums shrink-0">{i + 1}</span>
               <span
-                className="text-sm font-medium"
+                className="text-12 font-medium"
                 style={{ color: i === 0 ? "#1DB954" : "#FFFFFF" }}
               >
                 {entry.artist}
@@ -69,12 +57,12 @@ if (!top3.length) {
 
             <div className="flex flex-col items-end">
               <span
-                className="text-3xl font-bold tabular-nums leading-none"
+                className="text-2xl font-bold  leading-none"
                 style={{ color: i === 0 ? "#1DB954" : "#B3B3B3" }}
               >
                 {entry.tracks}
               </span>
-              <span className="text-[10px] text-[#B3B3B3] mt-0.5">
+              <span className="text-[6px] text-[#B3B3B3] mt-0.5">
                 {entry.tracks === 1 ? "track" : "tracks"}
               </span>
             </div>

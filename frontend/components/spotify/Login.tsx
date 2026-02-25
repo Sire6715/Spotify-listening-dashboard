@@ -9,13 +9,7 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <h1 className="text-2xl font-semibold mb-6">Welcome to My Spotify App</h1>
-      <Button style="bg-green-500 text-white font-bold text-4xl hover:bg-green-600 transition-all py-18 px-40 rounded-full text-white" onClick={handleLogin} text={"Login with Spotify"}/>
-      {/* <button
-        onClick={handleLogin}
-        className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all"
-      >
-        Login with Spotify
-      </button> */}
+      <Button style="bg-green-500 text-white font-bold text-4xl hover:bg-green-600 transition-all py-12 px-30 rounded-full text-white" onClick={handleLogin} text={"Login with Spotify"}/>
     </div>
   );
 }

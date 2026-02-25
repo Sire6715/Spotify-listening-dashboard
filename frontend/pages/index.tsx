@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { League_Spartan } from "next/font/google";
 import LoginPage from "@/components/spotify/Login";
 

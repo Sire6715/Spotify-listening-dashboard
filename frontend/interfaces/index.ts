@@ -90,3 +90,32 @@ export interface SpotifyTooltipProps {
   payload?: { value?: number | string }[];
   label?: string;
 }
+
+export interface MostListenedArtist {
+  Artist: Record<string, string>;
+  Track: Record<string, number>;
+}
+
+export interface ArtistListProps {
+  data: MostListenedArtist | undefined;
+}
+
+export interface ArtistEntry {
+  artist: string;
+  tracks: number;
+}
+
+
+export interface GenreEntry {
+  Count: number;
+  Genre: string;
+}
+
+export interface GenreDistributionProps {
+  data: GenreEntry[] | undefined;
+}
+
+export interface TooltipProps {
+  active?: boolean;
+  payload?: { name?: string; value?: number; payload?: { percent?: number } }[];
+}

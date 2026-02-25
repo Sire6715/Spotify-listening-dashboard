@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import {
   LineChart,
   Line,
@@ -59,7 +59,6 @@ function CustomDot(props: DotProps & { value?: number }) {
 }
 
 export default function PlaysPerHour({ data }: PlaysPerHourProps) {
-  const [zoom, setZoom] = useState(true);
 
   const chartData: ChartEntry[] = useMemo(() => {
     if (!data || typeof data !== "object") return [];
@@ -71,7 +70,6 @@ export default function PlaysPerHour({ data }: PlaysPerHourProps) {
   }, [data]);
 
   const visible = useMemo(() => {
-    if (!zoom) return chartData;
     const nonZeroIdx = chartData.reduce<number[]>(
       (acc, d, i) => (d.plays > 0 ? [...acc, i] : acc),
       []
@@ -80,37 +78,27 @@ export default function PlaysPerHour({ data }: PlaysPerHourProps) {
     const min = Math.max(0, nonZeroIdx[0] - 2);
     const max = Math.min(chartData.length - 1, nonZeroIdx[nonZeroIdx.length - 1] + 2);
     return chartData.slice(min, max + 1);
-  }, [chartData, zoom]);
+  }, [chartData]);
 
 
 if (!chartData.length) {
   return (
-    <div className="bg-[#181818] h-[23rem] rounded-xl p-6 border border-[#333333]">
+    <div className="bg-[#181818] col-span-3  h-92 cols-span-2 rounded-xl p-6 border border-[#333333]">
       <div className="h-full w-full bg-[#282828] rounded-full mb-6 animate-pulse" />
     </div>
   );
 }
 
   return (
-    <div className="bg-[#181818] rounded-xl p-6 border border-[#333333]">
+    <div className="bg-[#181818] col-span-3  rounded-xl p-6 border border-[#333333]">
       <div className="flex items-center justify-between mb-4">
         <p className="text-[#B3B3B3] text-[11px] font-bold tracking-widest uppercase m-0">
           Plays Per Hour
         </p>
-        <button
-          onClick={() => setZoom((v) => !v)}
-          className={`px-3 py-1 rounded-full text-[11px] font-bold border cursor-pointer transition-colors ${
-            zoom
-              ? "bg-[#1DB954] border-[#1DB954] text-black"
-              : "bg-transparent border-[#333333] text-[#B3B3B3] hover:border-white hover:text-white"
-          }`}
-        >
-          {zoom ? "Active periods" : "All hours"}
-        </button>
       </div>
 
       <ResponsiveContainer width="100%" height={263}>
-        <LineChart data={visible} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+        <LineChart data={visible} margin={{ top: 10, right: 10, left: -40, bottom: 0 }}>
           <CartesianGrid stroke={BORDER_COLOR} strokeDasharray="3 3" vertical={false} />
           <XAxis
             dataKey="label"

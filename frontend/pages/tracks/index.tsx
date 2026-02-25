@@ -4,15 +4,10 @@ import MediaCard from "@/components/common/MediaCard";
 export default function Tracks() {
   const { topTracks, loading } = useSpotifyData();
 
-  const formatnumber = (num: string | number) =>
-    Intl.NumberFormat("en", {
-      notation: "compact",
-      maximumFractionDigits: 1,
-    }).format(Number(num));
 
   if (loading) {
     return (
-      <div className="rounded-xl p-6">
+      <div className="rounded-xl p-6 h-full">
         <h1 className="font-bold text-4xl mt-8 mb-4">Top Tracks</h1>
         <div className="h-3 w-24 bg-[#282828] rounded-full mb-6 animate-pulse" />
         <ul className="m-0 p-0 list-none flex flex-col gap-1">

@@ -32,7 +32,7 @@ if (loading) {
     </div>
   );
 }
-  if (error) return <p>Error: {error}</p>;
+  if (error) return <p className="text-xl font-black text-white">Refresh page</p>;
 
   return (
     <div>

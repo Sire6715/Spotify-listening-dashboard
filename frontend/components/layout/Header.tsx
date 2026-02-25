@@ -3,13 +3,10 @@
 import React from "react";
 import { SpotifyUser } from "@/interfaces";
 import Image from "next/image";
-import useSpotifyData from "@/hooks/useSpotifyData";
 import { useStateContext } from "@/hooks/useStateContext";
 import { Menu, X } from "lucide-react";
 
 const Header: React.FC<SpotifyUser> = ({
-  country,
-  email,
   images = [],
   display_name,
 }) => {
@@ -17,7 +14,7 @@ const Header: React.FC<SpotifyUser> = ({
 
 
   return (
-    <div className="flex flex-row bg-[#121212] items-center justify-between p-2">
+    <div className="flex flex-row bg-[#121212] items-center justify-between p-2 mb-6">
       <div>
         {isSidebarOpen ? (
           <X onClick={() => setIsSidebarOpen((prev) => !prev)} />
@@ -26,7 +23,6 @@ const Header: React.FC<SpotifyUser> = ({
         )}
       </div>
       <div className="flex flex-col-reverse items-center">
-        {/* <h1 className="text-sm font-semibold">{display_name}</h1> */}
         {images && images.length > 0 && images[0]?.url ? (
           <div className="h-12 w-12 bg-gray-200 rounded-full">
             <Image

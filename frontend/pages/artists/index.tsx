@@ -2,7 +2,7 @@ import useSpotifyData from "@/hooks/useSpotifyData";
 import MediaCard from "@/components/common/MediaCard";
 
 export default function Artist() {
-  const { topTracks, loading, error, topArtists } = useSpotifyData();
+  const { loading, topArtists } = useSpotifyData();
 
   const formatnumber = (num: string | number) =>
     Intl.NumberFormat("en", {

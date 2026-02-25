@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import useSpotifyData from "@/hooks/useSpotifyData";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
@@ -41,8 +40,6 @@ export default function TrackCarousel() {
                 backgroundImage: `url(${track["Album Image"]})`,
               }}
             />
-
-            {/* Overlay for readability */}
             <div className="absolute inset-0 bg-black/50"></div>
 
             {/* Track info */}

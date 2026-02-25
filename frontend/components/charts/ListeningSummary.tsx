@@ -7,40 +7,41 @@ export default function ListeningSummary() {
   const summary = useMemo(() => {
     if (!analysisData) return null;
 
-    const { most_listened_artist, genre_distribution, plays_per_hour } = analysisData ?? {};
+    const { most_listened_artist, genre_distribution, plays_per_hour } =
+      analysisData ?? {};
 
-    // Top artist + play count
     const artists = Object.values(most_listened_artist?.Artist ?? {});
     const tracks = Object.values(most_listened_artist?.Track ?? {}) as number[];
     const topArtist = artists[0] as string | undefined;
     const topArtistCount = tracks[0] ?? 0;
 
-    // Top genre
     const topGenre = genre_distribution
       ? [...genre_distribution].sort((a, b) => b.Count - a.Count)[0]?.Genre
       : undefined;
 
-    // Total plays
     const totalPlays = plays_per_hour
-      ? Object.values(plays_per_hour as Record<string, number>).reduce((a, b) => a + b, 0)
+      ? Object.values(plays_per_hour as Record<string, number>).reduce(
+          (a, b) => a + b,
+          0,
+        )
       : 0;
 
-    // Rough hours estimate (avg ~3.5 min per track)
     const hoursPlayed = ((totalPlays * 3.5) / 60).toFixed(1);
 
     return { topArtist, topArtistCount, topGenre, totalPlays, hoursPlayed };
   }, [analysisData]);
 
   if (loading || !summary) {
-  return (
-    <div className="h-[10rem] rounded-xl p-6">
-      <div className="h-8 w-full bg-[#282828] rounded-full mb-6 animate-pulse" />
-      <div className="h-8 w-full bg-[#282828] rounded-full mb-6 animate-pulse" />
-    </div>
-  );
-}
+    return (
+      <div className="h-40 rounded-xl p-6">
+        <div className="h-8 w-full bg-[#282828] rounded-full mb-6 animate-pulse" />
+        <div className="h-8 w-full bg-[#282828] rounded-full mb-6 animate-pulse" />
+      </div>
+    );
+  }
 
-  const { topArtist, topArtistCount, topGenre, totalPlays, hoursPlayed } = summary;
+  const { topArtist, topArtistCount, topGenre, totalPlays, hoursPlayed } =
+    summary;
 
   return (
     <div className="rounded-xl p-6">
@@ -57,33 +58,56 @@ export default function ListeningSummary() {
       {/* Summary sentence */}
       <p className="text-white text-base leading-relaxed m-0 mb-5">
         You listened to{" "}
-        <span className=" text-[25px] text-[#1DB954] font-bold">{topArtist}</span> the most
-        —{" "}
-        <span className=" text-[25px] text-[#1DB954] font-bold">{topArtistCount}</span>{" "}
+        <span className=" lg:text-[25px] text-[#1DB954] font-bold">
+          {topArtist}
+        </span>{" "}
+        the most —{" "}
+        <span className=" lg:text-[25px] text-[#1DB954] font-bold">
+          {topArtistCount}
+        </span>{" "}
         {topArtistCount === 1 ? "time" : "times"} — and spent around{" "}
-        <span className=" text-[25px] text-[#1DB954] font-bold">{hoursPlayed} hours</span>{" "}
+        <span className=" lg:text-[25px] text-[#1DB954] font-bold">
+          {hoursPlayed} hours
+        </span>{" "}
         listening across{" "}
-        <span className=" text-[25px] text-[#1DB954] font-bold">{totalPlays} plays</span>.
-        Your taste leaned heavily into{" "}
-        <span className=" text-[25px] text-[#1DB954] font-bold capitalize">{topGenre}</span>.
+        <span className=" lg:text-[25px] text-[#1DB954] font-bold">
+          {totalPlays} plays
+        </span>
+        . Your taste leaned heavily into{" "}
+        <span className=" lg:text-[25px] text-[#1DB954] font-bold capitalize">
+          {topGenre}
+        </span>
+        .
       </p>
 
       {/* Stat pills */}
       <div className="flex flex-wrap gap-2">
         <div className="flex items-center gap-1.5 bg-[#282828] rounded-full px-3 py-1.5">
-          <span className="text-[10px] text-[#B3B3B3] uppercase tracking-wider">Top Artist</span>
+          <span className="text-[10px] text-[#B3B3B3] uppercase tracking-wider">
+            Top Artist
+          </span>
           <span className="text-xs text-white font-semibold">{topArtist}</span>
         </div>
         <div className="flex items-center gap-1.5 bg-[#282828] rounded-full px-3 py-1.5">
-          <span className="text-[10px] text-[#B3B3B3] uppercase tracking-wider">Hours</span>
-          <span className="text-xs text-white font-semibold">{hoursPlayed}h</span>
+          <span className="text-[10px] text-[#B3B3B3] uppercase tracking-wider">
+            Hours
+          </span>
+          <span className="text-xs text-white font-semibold">
+            {hoursPlayed}h
+          </span>
         </div>
         <div className="flex items-center gap-1.5 bg-[#282828] rounded-full px-3 py-1.5">
-          <span className="text-[10px] text-[#B3B3B3] uppercase tracking-wider">Top Genre</span>
-          <span className="text-xs text-white font-semibold capitalize">{topGenre}</span>
+          <span className="text-[10px] text-[#B3B3B3] uppercase tracking-wider">
+            Top Genre
+          </span>
+          <span className="text-xs text-white font-semibold capitalize">
+            {topGenre}
+          </span>
         </div>
         <div className="flex items-center gap-1.5 bg-[#282828] rounded-full px-3 py-1.5">
-          <span className="text-[10px] text-[#B3B3B3] uppercase tracking-wider">Total Plays</span>
+          <span className="text-[10px] text-[#B3B3B3] uppercase tracking-wider">
+            Total Plays
+          </span>
           <span className="text-xs text-white font-semibold">{totalPlays}</span>
         </div>
       </div>
