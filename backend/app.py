@@ -7,10 +7,15 @@ import pandas as pd
 import os
 import numpy as np
 from collections import Counter
+from flask_cors import CORS
 from analysis import get_top_tracks_df, get_top_artists_df, get_recent_plays_df 
 
 load_dotenv()
 app = Flask(__name__)
+CORS(app, supports_credentials=True, origins=[
+    "http://127.0.0.1:3000",
+    "http://localhost:3000"
+])
 
 app.secret_key = os.environ.get("SECRET_KEY")
 CLIENT_ID = os.environ.get('CLIENT_ID')
@@ -29,7 +34,7 @@ def index():
     Returns:
         str: HTML message with a link to initiate Spotify login.
     """
-    return "Welcome to my Spotify App <a href='/login'>Login with Spotify</a>"
+    return jsonify({"message": "API is running"})
 
 
 @app.route('/login')
@@ -57,15 +62,6 @@ def login():
 
 @app.route('/callback')
 def callback():
-    """
-    Handle the OAuth callback from Spotify after user login.
-
-    Exchanges the authorization code for access and refresh tokens,
-    and stores them in the Flask session for subsequent API calls.
-
-    Returns:
-        Response: Redirects to the '/user' route or returns an error JSON.
-    """
     if 'error' in request.args:
         return jsonify({"error": request.args['error']})
 
@@ -80,11 +76,40 @@ def callback():
         response = requests.post(TOKEN_URL, data=req_body)
         token_info = response.json()
 
+        # store tokens in Flask session
         session['access_token'] = token_info['access_token']
         session['refresh_token'] = token_info['refresh_token']
         session['expires_at'] = datetime.now().timestamp() + token_info['expires_in']
 
-    return redirect('/user')
+        # redirect to frontend dashboard page
+        return redirect("http://127.0.0.1:3000/home")
+
+
+
+@app.route('/refresh_token')
+def refresh_token():
+    refresh_token = session.get("refresh_token")
+    if not refresh_token:
+        return jsonify({"error": "No refresh token available"}), 401
+
+    payload = {
+        "grant_type": "refresh_token",
+        "refresh_token": refresh_token,
+        "client_id": CLIENT_ID,
+        "client_secret": CLIENT_SECRET
+    }
+
+    response = requests.post(TOKEN_URL, data=payload)
+    if response.status_code != 200:
+        return jsonify({"error": "Failed to refresh token", "details": response.json()}), 500
+
+    token_info = response.json()
+    session['access_token'] = token_info['access_token']
+    session['expires_at'] = datetime.now().timestamp() + token_info['expires_in']
+
+    # after refreshing, you can either redirect to /user or just return success
+    return redirect("http://127.0.0.1:3000/home")
+
 
 
 @app.route('/user')
@@ -113,7 +138,9 @@ def get_user():
     return jsonify(response.json())
 
 
-@app.route('/top_tracks')
+
+
+@app.route('/top_tracks',  methods=["GET"])
 def top_tracks():
     """
     Fetch and return the user's top tracks from Spotify.
@@ -143,6 +170,8 @@ def top_artists():
     access_token = session.get('access_token')
     df = get_top_artists_df(access_token)
     return jsonify(df.to_dict(orient='records'))
+
+
 
 
 @app.route('/recently-played')
@@ -194,6 +223,7 @@ def analysis():
         tracks_df.groupby('Artist')['Track']
         .count()
         .sort_values(ascending=False)
+        .reset_index()
         .to_dict()
     )
 
