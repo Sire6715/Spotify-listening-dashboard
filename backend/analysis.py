@@ -119,7 +119,7 @@ def get_top_artists_df(access_token):
         Exception: If the API request fails or returns a non-200 status code.
     """
     headers = {'Authorization': f'Bearer {access_token}'}
-    params = {'limit': 20}
+    params = {'limit': 20, 'time_range': 'short_term'}
 
     response = requests.get(API_BASE_URI + 'me/top/artists', headers=headers, params=params)
     if response.status_code != 200:
