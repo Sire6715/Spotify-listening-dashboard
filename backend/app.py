@@ -8,7 +8,8 @@ import os
 import numpy as np
 from collections import Counter
 from flask_cors import CORS
-from analysis import get_top_tracks_df, get_top_artists_df, get_recent_plays_df 
+from analysis import get_top_tracks_df, get_top_artists_df , get_recent_plays_df
+
 
 load_dotenv()
 app = Flask(__name__)
@@ -16,6 +17,11 @@ CORS(app, supports_credentials=True, origins=[
     "http://127.0.0.1:3000",
     "http://localhost:3000"
 ])
+
+SPOTIFY_FEATURES = pd.read_csv("data/SpotifyFeatures.csv")
+
+def get_features_df():
+    return SPOTIFY_FEATURES
 
 app.secret_key = os.environ.get("SECRET_KEY")
 CLIENT_ID = os.environ.get('CLIENT_ID')
@@ -191,32 +197,57 @@ def recently_played():
 
 
 @app.route('/analysis')
-    #Load CSV data
 def analysis():
-        
-    tracks_df = pd.read_csv("data/top_tracks.csv")
-    artists_df = pd.read_csv("data/top_artists.csv")
-    recent_plays_df = pd.read_csv("data/recently_played.csv")
-    track_feature_df = pd.read_csv("data/SpotifyFeatures.csv")    
-    
-    #Merge track Featues
+
+    access_token = session.get('access_token')
+
+    if not access_token:
+        return jsonify({"error": "Not authenticated"}), 401
+
+    # Get fresh data from Spotify
+    tracks_df = get_top_tracks_df(access_token)
+    artists_df = get_top_artists_df(access_token)
+    recent_plays_df = get_recent_plays_df(access_token)
+
+    # Merge with SpotifyFeatures
     tracks_stats = pd.merge(
         tracks_df,
-        track_feature_df,
+        SPOTIFY_FEATURES,
         on='Track',
         how='left'
     )
-    
-    # plays per hour
+
+    # Plays per hour
     recent_plays_df['Played At'] = pd.to_datetime(recent_plays_df['Played At'])
-    plays_per_hour = recent_plays_df.set_index('Played At').resample('h').size().to_dict()
-    plays_per_hour_dict = {t.strftime('%Y-%m-%d %H:%M:%S'): count for t, count in plays_per_hour.items()}
-    
-    # Most listened song features 
-    features = ['Danceability', 'Energy', 'Speechiness', 'Instrumentalness', 'Valence']
+
+    plays_per_hour = (
+        recent_plays_df
+        .set_index('Played At')
+        .resample('h')
+        .size()
+    )
+
+    plays_per_hour_dict = {
+        t.strftime('%Y-%m-%d %H:%M:%S'): int(count)
+        for t, count in plays_per_hour.items()
+    }
+
+    # Feature percentages
+    features = [
+        'Danceability',
+        'Energy',
+        'Speechiness',
+        'Instrumentalness',
+        'Valence'
+    ]
+
     track_features = tracks_stats.groupby('Track')[features].sum()
+
     total_sum = np.sum(track_features.to_numpy())
-    feature_percentages = ((track_features.sum(axis=0) / total_sum) * 100).round().to_dict()
+
+    feature_percentages = (
+        (track_features.sum() / total_sum) * 100
+    ).round(2).to_dict()
 
     # Most listened artists
     most_listened_artist = (
@@ -232,13 +263,19 @@ def analysis():
         lambda x: [g.strip() for g in x.split(',')] if x else []
     )
 
-    all_genres = [genre for sublist in artists_df['Genres'] for genre in sublist]
-    genre_counts = Counter(all_genres)
-    genre_df = pd.DataFrame(genre_counts.items(), columns=['Genre', 'Count']).sort_values('Count', ascending=False)
-    genre_distribution = genre_df.to_dict(orient='records')
+    all_genres = [
+        genre
+        for sublist in artists_df['Genres']
+        for genre in sublist
+    ]
 
-    
-    # Return JSON 
+    genre_counts = Counter(all_genres)
+
+    genre_distribution = [
+        {"Genre": k, "Count": v}
+        for k, v in genre_counts.items()
+    ]
+
     return jsonify({
         "plays_per_hour": plays_per_hour_dict,
         "feature_percentages": feature_percentages,
