@@ -33,7 +33,7 @@ export default function Tracks() {
     <div>
       <h1 className="font-bold text-4xl mt-8 mb-4">Top Tracks</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-1 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-6">
         {topTracks.map((track, index) => (
           <MediaCard
             key={index}

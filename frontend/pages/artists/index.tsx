@@ -35,7 +35,7 @@ export default function Artist() {
     <div>
       <h1 className="font-bold text-4xl mt-8 mb-4">Top Artists</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-1 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-6">
         {topArtists?.map((artist, index) => (
           <MediaCard
             key={index}
