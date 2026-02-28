@@ -25,42 +25,35 @@ def get_top_tracks_df(access_token):
     Raises:
         Exception: If the API request fails or returns a non-200 status code.
     """
+
     headers = {'Authorization': f'Bearer {access_token}'}
 
     time_range = request.args.get('time_range', 'short_term')
     params = {'limit': 20, 'time_range': time_range}
 
-    response = requests.get(API_BASE_URI + 'me/top/tracks', headers=headers, params=params)
-    
-        # Debugging info
-    print("Spotify API status:", response.status_code)
-    print("Spotify response:", response.text)
-    
+    response = requests.get(
+        API_BASE_URI + 'me/top/tracks',
+        headers=headers,
+        params=params
+    )
+
     if response.status_code != 200:
-        raise Exception(f"Error fetching tracks: {response.json()}")
+        raise Exception(response.json())
 
     data = response.json()
     tracks = []
 
-    tracks.extend({
-        'Track':
-        item['name'],
-        'Artist':
-        item['artists'][0]['name'],
-        'Album':
-        item['album']['name'],
-        'Popularity':
-        item['popularity'],
-        'Spotify URL':
-        item['external_urls']['spotify'],
-        'Album Image': (item['album']['images'][0]['url']
-                        if item['album']['images'] else None),
-    } for item in data['items'])
-    
-    df = pd.DataFrame(tracks)
-    df.to_csv(os.path.join(DATA_DIR, "top_tracks.csv"), index=False) 
+    for item in data['items']:
+        tracks.append({
+            'Track': item['name'],
+            'Artist': item['artists'][0]['name'],
+            'Album': item['album']['name'],
+            'Popularity': item['popularity'],
+            'Spotify URL': item['external_urls']['spotify'],
+            'Album Image': item['album']['images'][0]['url']
+        })
 
-    return df
+    return pd.DataFrame(tracks)
 
 
 def get_recent_plays_df(access_token):
@@ -82,6 +75,7 @@ def get_recent_plays_df(access_token):
 
     response = requests.get(API_BASE_URI + 'me/player/recently-played', headers=headers, params=params)
     if response.status_code != 200:
+# sourcery skip: raise-specific-error
         raise Exception(f"Error fetching recent plays: {response.json()}")
 
     data = response.json()
@@ -107,11 +101,8 @@ def get_recent_plays_df(access_token):
     # Ensure "Played At" is in datetime format for analysis
     df['Played At'] = pd.to_datetime(df['Played At'])
 
-    # Save to CSV
-    df.to_csv(os.path.join(DATA_DIR, "recently_played.csv"), index=False)
 
     return df
-
 
 def get_top_artists_df(access_token):
     """
@@ -128,7 +119,7 @@ def get_top_artists_df(access_token):
         Exception: If the API request fails or returns a non-200 status code.
     """
     headers = {'Authorization': f'Bearer {access_token}'}
-    params = {'limit': 20}
+    params = {'limit': 20, 'time_range': 'short_term'}
 
     response = requests.get(API_BASE_URI + 'me/top/artists', headers=headers, params=params)
     if response.status_code != 200:
@@ -148,6 +139,5 @@ def get_top_artists_df(access_token):
         } for item in data['items'])
     
     df = pd.DataFrame(artists)
-    df.to_csv(os.path.join(DATA_DIR, "top_artists.csv"), index=False) 
 
     return df
