@@ -118,7 +118,7 @@ def refresh_token():
     session['expires_at'] = datetime.now().timestamp() + token_info['expires_in']
 
     # after refreshing, you can either redirect to /user or just return success
-    return redirect(os.environ.get("FRONTEND_URL") + "/home")
+    return redirect(os.environ.get("FRONTEND_URL") + "/login")
 
 
 
