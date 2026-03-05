@@ -32,6 +32,9 @@ AUTH_URL = os.environ.get('AUTH_URL')
 TOKEN_URL = os.environ.get('TOKEN_URL')
 API_BASE_URI = os.environ.get('API_BASE_URI')
 
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+app.config['SESSION_COOKIE_SECURE'] = True
+
 
 @app.route('/')
 def index():
@@ -119,32 +122,26 @@ def refresh_token():
 
 
 
+
 @app.route('/user')
 def get_user():
     """
     Retrieve the authenticated user's Spotify profile data.
 
-    Checks if a valid access token exists; if expired, redirects to refresh.
-    Fetches the user's profile using Spotify’s 'me' endpoint.
+    Checks if a valid access token exists; if expired, throw's 401 error.
 
     Returns:
         Response: JSON of user profile data or an error message.
     """
     if 'access_token' not in session:
-        return redirect('/login')
+        return jsonify({"error": "Not authenticated"}), 401  # don't redirect
 
     if datetime.now().timestamp() > session['expires_at']:
-        return redirect('/refresh_token')
+        return jsonify({"error": "Token expired"}), 401  # don't redirect
 
     headers = {'Authorization': f"Bearer {session['access_token']}"}
     response = requests.get(API_BASE_URI + 'me', headers=headers)
-
-    if response.status_code != 200:
-        return {'error': 'Failed to retrieve user', 'details': response.json()}, response.status_code
-
     return jsonify(response.json())
-
-
 
 
 @app.route('/top_tracks',  methods=["GET"])
