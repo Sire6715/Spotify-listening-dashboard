@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
 export default function LoginPage() {
   const handleLogin = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/login`;
-  };
+  window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/login`;
+};
 
   return (
     <>
@@ -63,6 +63,7 @@ export default function LoginPage() {
 
       {/* Page */}
       <div className="font-dm relative flex min-h-dvh flex-col items-center justify-center overflow-x-hidden bg-[#0a0a0a] px-6 py-8 text-[#f0f0f0] md:py-12">
+
         {/* Ambient blobs */}
         <div className="animate-drift pointer-events-none fixed left-[-10%] top-[-10%] h-[clamp(260px,50vw,520px)] w-[clamp(260px,50vw,520px)] rounded-full bg-[#1DB954] opacity-[0.18] blur-[80px]" />
         <div className="animate-drift-2 pointer-events-none fixed bottom-[5%] right-[-8%] h-[clamp(180px,35vw,360px)] w-[clamp(180px,35vw,360px)] rounded-full bg-[#8b5cf6] opacity-[0.18] blur-[80px]" />
@@ -80,17 +81,16 @@ export default function LoginPage() {
         <div
           className="afu relative z-10 w-full max-w-[460px] rounded-[2rem] border border-white/[0.08] backdrop-blur-2xl md:rounded-[2.5rem]"
           style={{
-            background: "rgba(255,255,255,0.04)",
-            padding: "clamp(2.5rem,8vw,4rem) clamp(2rem,6vw,3.5rem)",
-            boxShadow:
-              "0 0 0 1px rgba(29,185,84,0.08), 0 40px 80px rgba(0,0,0,0.5)",
+            background: 'rgba(255,255,255,0.04)',
+            padding: 'clamp(2.5rem,8vw,4rem) clamp(2rem,6vw,3.5rem)',
+            boxShadow: '0 0 0 1px rgba(29,185,84,0.08), 0 40px 80px rgba(0,0,0,0.5)',
           }}
         >
           {/* Logo */}
           <div className="afu-1 mb-10 flex items-center justify-center gap-2.5">
             <div
               className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#1DB954]"
-              style={{ boxShadow: "0 0 24px rgba(29,185,84,0.5)" }}
+              style={{ boxShadow: '0 0 24px rgba(29,185,84,0.5)' }}
             >
               <div className="flex h-[14px] items-end gap-[2px]">
                 <div className="eq-bar" />
@@ -105,18 +105,13 @@ export default function LoginPage() {
           </div>
 
           {/* Heading */}
-          <h1
-            className="afu-2 font-syne mb-3 text-center font-extrabold leading-[1.1] tracking-tighter"
-            style={{ fontSize: "clamp(2rem,6vw,2.6rem)" }}
-          >
-            Your music,
-            <br />
+          <h1 className="afu-2 font-syne mb-3 text-center font-extrabold leading-[1.1] tracking-tighter" style={{ fontSize: 'clamp(2rem,6vw,2.6rem)' }}>
+            Your music,<br />
             <span className="text-[#1DB954]">your world.</span>
           </h1>
 
           <p className="afu-3 mb-10 text-center text-[0.95rem] leading-relaxed text-[#888]">
-            Connect your Spotify account to unlock
-            <br />
+            Connect your Spotify account to unlock<br />
             personalized playlists and insights.
           </p>
 
@@ -125,17 +120,13 @@ export default function LoginPage() {
             <button
               className="login-btn font-dm flex w-full cursor-pointer items-center justify-center gap-3 rounded-full border-none bg-[#1DB954] px-8 py-4 font-bold tracking-wide text-black transition-[background,box-shadow] duration-200"
               style={{
-                fontSize: "clamp(0.95rem,2.5vw,1.05rem)",
-                boxShadow: "0 4px 24px rgba(29,185,84,0.35)",
+                fontSize: 'clamp(0.95rem,2.5vw,1.05rem)',
+                boxShadow: '0 4px 24px rgba(29,185,84,0.35)',
               }}
               onClick={handleLogin}
             >
-              <svg
-                className="h-5 w-5 shrink-0 fill-black"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
+              <svg className="h-5 w-5 shrink-0 fill-black" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
               </svg>
               Continue with Spotify
             </button>
@@ -144,9 +135,7 @@ export default function LoginPage() {
           {/* Divider */}
           <div className="afu-5 my-7 flex items-center gap-4">
             <div className="h-px flex-1 bg-white/[0.08]" />
-            <span className="text-[0.8rem] uppercase tracking-widest text-[#888]">
-              what you get
-            </span>
+            <span className="text-[0.8rem] uppercase tracking-widest text-[#888]">what you get</span>
             <div className="h-px flex-1 bg-white/[0.08]" />
           </div>
 
@@ -157,10 +146,7 @@ export default function LoginPage() {
               "Smart playlist recommendations",
               "Top tracks, artists & genres",
             ].map((f, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-2.5 text-[0.875rem] text-[#888]"
-              >
+              <div key={i} className="flex items-center gap-2.5 text-[0.875rem] text-[#888]">
                 <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#1DB954] opacity-80" />
                 <span>{f}</span>
               </div>
