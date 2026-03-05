@@ -15,7 +15,8 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app, supports_credentials=True, origins=[
     "http://127.0.0.1:3000",
-    "http://localhost:3000"
+    "http://localhost:3000",
+    os.environ.get("FRONTEND_URL")
 ])
 
 SPOTIFY_FEATURES = pd.read_csv("data/SpotifyFeatures.csv")
@@ -88,7 +89,7 @@ def callback():
         session['expires_at'] = datetime.now().timestamp() + token_info['expires_in']
 
         # redirect to frontend dashboard page
-        return redirect("http://127.0.0.1:3000/home")
+        return redirect(os.environ.get("FRONTEND_URL") + "/home")
 
 
 
@@ -114,7 +115,7 @@ def refresh_token():
     session['expires_at'] = datetime.now().timestamp() + token_info['expires_in']
 
     # after refreshing, you can either redirect to /user or just return success
-    return redirect("http://127.0.0.1:3000/home")
+    return redirect(os.environ.get("FRONTEND_URL") + "/home")
 
 
 
