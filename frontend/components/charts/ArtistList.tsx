@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import {MostListenedArtist, ArtistListProps, ArtistEntry} from "@/interfaces";
+import {ArtistListProps, ArtistEntry} from "@/interfaces";
 
 
 export default function ArtistList({ data }: ArtistListProps) {

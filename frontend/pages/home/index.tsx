@@ -1,15 +1,12 @@
 "use client";
 import useSpotifyData from "@/hooks/useSpotifyData";
 import Hero from "@/components/spotify/Hero";
-import { useStateContext } from "@/hooks/useStateContext";
+
 
 export default function Home() {
-  const { userData, topTracks, topArtists, analysisData, error } =
+  const { topTracks, topArtists, analysisData, error } =
     useSpotifyData();
-  console.log(userData)
-  console.log(topTracks)
-  console.log(topArtists)
-  console.log(analysisData)
+
   if (error)
     return (
       <p className="text-xl font-black text-white">
