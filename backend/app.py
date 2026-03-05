@@ -285,9 +285,6 @@ def analysis():
 
 
 if __name__ == '__main__':
-    """
-    Run the Flask application on host 0.0.0.0 with debug mode enabled.
-    """
-    app.run(host='0.0.0.0', debug=True) 
+    app.run(host='0.0.0.0', debug=False, port=5000)
 
 # 
